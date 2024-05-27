@@ -42,12 +42,12 @@ public:
   ~llist() {
     // Destructor (borra la lista)
     llnode<T>* current = nil->next; // obtener la cabeza
-    while (current != nil) { // si es distinto al sentinela
+    while (current != nil) { // si es distinto al centinela
       llnode<T>* to_delete = current; // guardar el puntero a borrar
       current = current->next; // guardar el siguiente
       delete to_delete; // borrar el actual
     }
-    delete nil; // borrar el sentinela
+    delete nil; // borrar el centinela
   };
   
   void Insert(llnode<T>* x) {
@@ -61,7 +61,7 @@ public:
   llnode<T>* Search(const T& k) {
     // Busca la llave iterativamente. Si la encuentra, devuelve un apuntador al nodo que la contiene; sino devuelve el nodo nil (el centinela).
     llnode<T>* current = nil->next; // obtener la cabeza
-    while (current != nil && current->key != k) { // buscar hasta que el current sea el sentinela o se encuentre la llave
+    while (current != nil && current->key != k) { // buscar hasta que el current sea el centinela o se encuentre la llave
         current = current->next;
     }
     return current; // y retornar el valor encontrado
@@ -69,7 +69,7 @@ public:
       
   void Delete(llnode<T>* x) {
     // Saca de la lista la llave contenida en el nodo apuntado por x.
-    if (x != nil) { // si no se esta pidiendo eliminar el sentinela 
+    if (x != nil) { // si no se esta pidiendo eliminar el centinela 
       // se va a explicar con un ejemplo en vez de palabras con una lista de 
       // ejemplo en el que cada nodo se representa por (direccion, k=a) con a
       // el valor de la llave del nodo. -> representa el siguiente nodo.
