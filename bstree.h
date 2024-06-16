@@ -31,6 +31,27 @@ public:
 template <typename T>
 class bstree
 {
+private:
+  void clear(bstnode<T> *node) {
+    if (node != nullptr) { // si el nodo no es nulo
+      clear(node->left); // borre el izquierdo
+      clear(node->right); // y el derecho
+      delete node; // cuando se terminen los llamados recursivos va a ir eliminando cada 1
+    }
+  }
+
+  void transplant(bstnode<T>* u, bstnode<T>* v) {
+    if (u->p == nullptr) { // si u es la raiz
+      root = v; // remplaza la raiz por v
+    } else if (u == u->p->left) { // si u es el hijo izquierdo de su padre
+      u->p->left = v; // remplaza el izquierdo con el v
+    } else { // si u es el hijo derechod e su padre
+      u->p->right = v; // lo remplaza con el derecho
+    }
+    if (v != nullptr) { 
+      v->p = u->p; // el padre de v ahora es el padre de u
+    }
+  }
 public:
   bstnode<T> *root;    // raiz del arbol
 
@@ -39,14 +60,6 @@ public:
   ~bstree() {
     clear(root); // borrado recursivo
   };
-
-  void clear(bstnode<T> *node) {
-    if (node != nullptr) { // si el nodo no es nulo
-      clear(node->left); // borre el izquierdo
-      clear(node->right); // y el derecho
-      delete node; // cuando se terminen los llamados recursivos va a ir eliminando cada 1
-    }
-  }
   
   void Insert(bstnode<T>* z) {
     bstnode<T> *y = nullptr; // auxiliar
@@ -112,8 +125,8 @@ public:
   
   bstnode<T>* Maximum(bstnode<T> *x) {
     while (x->right != nullptr) {
-        x = x->right; // Los mayores o iguales siempre van a estar a la
-                      // derecha entonces busque hasta el ultimo
+      x = x->right; // Los mayores o iguales siempre van a estar a la
+                    // derecha entonces busque hasta el ultimo
     }
     return x;
   };
@@ -140,36 +153,23 @@ public:
     bstnode<T> *x;
 
     if (z->left == nullptr) { // subarbol izquierdo vacio
-      exchange(z, z->right);
+      transplant(z, z->right);
     } else if (z->right == nullptr) { // subarbol derecho vacio
-      exchange(z, z->left);
+      transplant(z, z->left);
     } else { // tiene ambos subarboles
       y = Minimum(z->right); // hallar el minimo del arbol derecho de z
       if (y->p != z) { // si el papa del minimo del arbol derecho de z no es z
-        exchange(y, y->right); // remplaza y con su subarbol derecho
+        transplant(y, y->right); // remplaza y con su subarbol derecho
         y->right = z->right; // conecta el subarbol derecho de z con y
         y->right->p = y; // padre del subarbo derecho de z a y
       }
-      exchange(z, y); // remplazar z con y
+      transplant(z, y); // remplazar z con y
       y->left = z->left; // conectar el subarbol izquierdo con z y y
       y->left->p = y; // actualizar el apdre del subarbol izquierdo de z a y
     }
 
     delete z; // liberar el elemento que se queria eliminar
   };  
-
-  void exchange(bstnode<T>* u, bstnode<T>* v) {
-    if (u->p == nullptr) { // si u es la raiz
-      root = v; // remplaza la raiz por v
-    } else if (u == u->p->left) { // si u es el hijo izquierdo de su padre
-      u->p->left = v; // remplaza el izquierdo con el v
-    } else { // si u es el hijo derechod e su padre
-      u->p->right = v; // lo remplaza con el derecho
-    }
-    if (v != nullptr) { 
-      v->p = u->p; // el padre de v ahora es el padre de u
-    }
-  }
 };
 
 #endif /* bstree_h */
